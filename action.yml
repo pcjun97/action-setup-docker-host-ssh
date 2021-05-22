@@ -1,0 +1,32 @@
+name: 'Docker over SSH'
+description: 'Setup connection to remote Docker Daemon through SSH'
+inputs:
+  host:
+    description: 'Remote Docker host'
+    required: true
+  port:
+    description: 'SSH port'
+    required: true
+    default: '22'
+  user:
+    description: 'SSH user'
+    required: true
+  key:
+    description: 'Content of SSH private key'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - shell: bash
+      run: |
+        mkdir -p .ssh
+        echo ${{ inputs.key }} > .ssh/id_rsa
+        ssh-keyscan -H ${{ inputs.host }} >> ~/.ssh/known_hosts
+        echo "Host ${{ inputs.host }}" >> .ssh/config
+        echo "    IdentityFile ~/.ssh/id_rsa" >> .ssh/config
+        echo "    StrictHostKeyChecking no" >> .ssh/config
+        echo "DOCKER_HOST=ssh://${{ inputs.user }}@${{ inputs.host }}:${{ inputs.port }}" >> $GITHUB_ENV
+
+    - shell: bash
+      run: echo "DOCKER_HOST=ssh://${{ inputs.user }}@${{ inputs.host }}:${{ inputs.port }}"
+      id: docker-host
