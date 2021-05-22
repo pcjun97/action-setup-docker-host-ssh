@@ -24,6 +24,7 @@ runs:
         SSH_HOST: ${{ inputs.host }}
         SSH_USER: ${{ inputs.user }}
       run: |
+        env
         mkdir -p .ssh
         echo "$SSH_KEY" > .ssh/id_rsa
         touch ~/.ssh/known_hosts
