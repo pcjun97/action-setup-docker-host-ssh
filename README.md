@@ -2,7 +2,7 @@
 
 Setup the connection to remote Docker daemon via SSH.
 Adds private key, known hosts and ssh configuration file.
-Optionally setups the DOCKER\_HOST environment variable.
+Optionally setups the `DOCKER_HOST` environment variable.
 
 ## Input variables
 
