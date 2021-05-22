@@ -21,7 +21,9 @@ runs:
       run: |
         mkdir -p .ssh
         echo ${{ inputs.key }} > .ssh/id_rsa
+        touch ~/.ssh/known_hosts
         ssh-keyscan -H ${{ inputs.host }} >> ~/.ssh/known_hosts
+        touch ~/.ssh/config
         echo "Host ${{ inputs.host }}" >> .ssh/config
         echo "    IdentityFile ~/.ssh/id_rsa" >> .ssh/config
         echo "    StrictHostKeyChecking no" >> .ssh/config
