@@ -30,7 +30,7 @@ Default - Configure env var `DOCKER_HOST` in every subsequent steps
 to point to the Docker daemon host.
 
 ```yaml
-- uses: pcjun97/action-setup-docker-host-ssh@master
+- uses: pcjun97/action-setup-docker-host-ssh@v1
   with:
     host: ${{ secrets.SSH_HOST }}
     port: ${{ secrets.SSH_PORT }}
@@ -44,7 +44,7 @@ to point to the Docker daemon host.
 Alternatively, set up the environment variable with per step basis.
 
 ```yaml
-- uses: pcjun97/action-setup-docker-host-ssh@master
+- uses: pcjun97/action-setup-docker-host-ssh@v1
   id: docker-ssh
   with:
     host: ${{ secrets.SSH_HOST }}
