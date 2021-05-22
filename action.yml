@@ -38,5 +38,4 @@ runs:
         SSH_PORT: ${{ inputs.port }}
         SSH_HOST: ${{ inputs.host }}
         SSH_USER: ${{ inputs.user }}
-      run: echo "ssh://$SSH_USER@$SSH_HOST:$SSH_PORT"
-      id: docker-host
+      run: echo "::set-output name=docker-host::ssh://$SSH_USER@SSH_HOST:$SSH_PORT"
