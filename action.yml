@@ -28,5 +28,5 @@ runs:
         echo "DOCKER_HOST=ssh://${{ inputs.user }}@${{ inputs.host }}:${{ inputs.port }}" >> $GITHUB_ENV
 
     - shell: bash
-      run: echo "DOCKER_HOST=ssh://${{ inputs.user }}@${{ inputs.host }}:${{ inputs.port }}"
+      run: echo "ssh://${{ inputs.user }}@${{ inputs.host }}:${{ inputs.port }}"
       id: docker-host
