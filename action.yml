@@ -1,5 +1,8 @@
 name: 'Docker over SSH'
 description: 'Setup connection to remote Docker Daemon through SSH'
+branding:
+  icon: terminal
+  color: blue
 inputs:
   host:
     description: 'Remote Docker host'
