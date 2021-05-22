@@ -27,21 +27,21 @@ runs:
   steps:
     - shell: bash
       env:
-        SSH_KEY: ${{ inputs.key }}
-        SSH_PORT: ${{ inputs.port }}
-        SSH_HOST: ${{ inputs.host }}
-        SSH_USER: ${{ inputs.user }}
-        SSH_KEY_PATH: ${{ inputs.key_path }}
-        SET_DOCKER_HOST_ENV: ${{ inputs.set_docker_host_env }}
+        INPUT_KEY: ${{ inputs.key }}
+        INPUT_PORT: ${{ inputs.port }}
+        INPUT_HOST: ${{ inputs.host }}
+        INPUT_USER: ${{ inputs.user }}
+        INPUT_KEY_PATH: ${{ inputs.key_path }}
+        INPUT_SET_DOCKER_HOST_ENV: ${{ inputs.set_docker_host_env }}
       run: |
-        echo key_path=$INPUT_KEY_PATH
         mkdir -p ~/.ssh
-        echo "$SSH_KEY" > $SSH_KEY_PATH
-        chmod 600 $SSH_KEY_PATH
-        ssh-keyscan -H $SSH_HOST 2> /dev/null 1> ~/.ssh/known_hosts
-        echo "Host $SSH_HOST" >> ~/.ssh/config
-        echo "    IdentityFile $SSH_KEY_PATH" >> ~/.ssh/config
+        echo "$INPUT_KEY" > $INPUT_KEY_PATH
+        chmod 600 $INPUT_KEY_PATH
+        ssh-keyscan -H $INPUT_HOST 2> /dev/null 1> ~/.ssh/known_hosts
+        echo "Host $INPUT_HOST" >> ~/.ssh/config
+        echo "    IdentityFile $INPUT_KEY_PATH" >> ~/.ssh/config
+        export DOCKER_HOST=ssh://$INPUT_USER@$INPUT_HOST:$INPUT_PORT
         if [ $SET_DOCKER_HOST_ENV = true ]; then
-          echo "DOCKER_HOST=ssh://$SSH_USER@$SSH_HOST:$SSH_PORT" >> $GITHUB_ENV
+          echo "DOCKER_HOST=$DOCKER_HOST" >> $GITHUB_ENV
         fi
-        echo "::set-output name=docker-host::ssh://$SSH_USER@SSH_HOST:$SSH_PORT"
+        echo "::set-output name=docker-host::$DOCKER_HOST"
