@@ -18,17 +18,26 @@ runs:
   using: 'composite'
   steps:
     - shell: bash
+      env:
+        SSH_KEY: ${{ inputs.key }}
+        SSH_PORT: ${{ inputs.port }}
+        SSH_HOST: ${{ inputs.host }}
+        SSH_USER: ${{ inputs.user }}
       run: |
         mkdir -p .ssh
-        echo ${{ inputs.key }} > .ssh/id_rsa
+        echo "$SSH_KEY" > .ssh/id_rsa
         touch ~/.ssh/known_hosts
-        ssh-keyscan -H ${{ inputs.host }} >> ~/.ssh/known_hosts
+        ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
         touch ~/.ssh/config
-        echo "Host ${{ inputs.host }}" >> .ssh/config
+        echo "Host $SSH_HOST" >> .ssh/config
         echo "    IdentityFile ~/.ssh/id_rsa" >> .ssh/config
         echo "    StrictHostKeyChecking no" >> .ssh/config
-        echo "DOCKER_HOST=ssh://${{ inputs.user }}@${{ inputs.host }}:${{ inputs.port }}" >> $GITHUB_ENV
+        echo "DOCKER_HOST=ssh://$SSH_USER@$SSH_HOST:$SSH_PORT" >> $GITHUB_ENV
 
     - shell: bash
-      run: echo "ssh://${{ inputs.user }}@${{ inputs.host }}:${{ inputs.port }}"
+      env:
+        SSH_PORT: ${{ inputs.port }}
+        SSH_HOST: ${{ inputs.host }}
+        SSH_USER: ${{ inputs.user }}
+      run: echo "ssh://$SSH_USER@$SSH_HOST:$SSH_PORT"
       id: docker-host
