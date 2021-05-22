@@ -18,6 +18,10 @@ inputs:
     description: 'Path to the SSH private key'
     required: false
     default: '/home/runner/.ssh/id_rsa'
+  set_docker_host_env:
+    description: 'If the DOCKER_HOST env should be changed'
+    required: false
+    default: 'true'
 runs:
   using: 'composite'
   steps:
@@ -28,18 +32,16 @@ runs:
         SSH_HOST: ${{ inputs.host }}
         SSH_USER: ${{ inputs.user }}
         SSH_KEY_PATH: ${{ inputs.key_path }}
+        SET_DOCKER_HOST_ENV: ${{ inputs.set_docker_host_env }}
       run: |
+        echo key_path=$INPUT_KEY_PATH
         mkdir -p ~/.ssh
         echo "$SSH_KEY" > $SSH_KEY_PATH
         chmod 600 $SSH_KEY_PATH
         ssh-keyscan -H $SSH_HOST 2> /dev/null 1> ~/.ssh/known_hosts
         echo "Host $SSH_HOST" >> ~/.ssh/config
         echo "    IdentityFile $SSH_KEY_PATH" >> ~/.ssh/config
-        echo "DOCKER_HOST=ssh://$SSH_USER@$SSH_HOST:$SSH_PORT" >> $GITHUB_ENV
-
-    - shell: bash
-      env:
-        SSH_PORT: ${{ inputs.port }}
-        SSH_HOST: ${{ inputs.host }}
-        SSH_USER: ${{ inputs.user }}
-      run: echo "::set-output name=docker-host::ssh://$SSH_USER@SSH_HOST:$SSH_PORT"
+        if [ $SET_DOCKER_HOST_ENV = true ]; then
+          echo "DOCKER_HOST=ssh://$SSH_USER@$SSH_HOST:$SSH_PORT" >> $GITHUB_ENV
+        fi
+        echo "::set-output name=docker-host::ssh://$SSH_USER@SSH_HOST:$SSH_PORT"
