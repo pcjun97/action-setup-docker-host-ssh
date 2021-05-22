@@ -1,4 +1,4 @@
-# Remote Docker Host (SSH)
+# Docker over SSH
 
 Setup the connection to remote Docker daemon via SSH.
 Adds private key, known hosts and ssh configuration file.
