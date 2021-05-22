@@ -24,15 +24,12 @@ runs:
         SSH_HOST: ${{ inputs.host }}
         SSH_USER: ${{ inputs.user }}
       run: |
-        env
-        mkdir -p .ssh
-        echo "$SSH_KEY" > .ssh/id_rsa
-        touch ~/.ssh/known_hosts
+        mkdir -p ~/.ssh
+        echo "$SSH_KEY" > ~/.ssh/id_rsa
         ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
-        touch ~/.ssh/config
-        echo "Host $SSH_HOST" >> .ssh/config
-        echo "    IdentityFile ~/.ssh/id_rsa" >> .ssh/config
-        echo "    StrictHostKeyChecking no" >> .ssh/config
+        echo "Host $SSH_HOST" >> ~/.ssh/config
+        echo "    IdentityFile ~/.ssh/id_rsa" >> ~/.ssh/config
+        echo "    StrictHostKeyChecking no" >> ~/.ssh/config
         echo "DOCKER_HOST=ssh://$SSH_USER@$SSH_HOST:$SSH_PORT" >> $GITHUB_ENV
 
     - shell: bash
