@@ -6,7 +6,7 @@ inputs:
     required: true
   port:
     description: 'SSH port'
-    required: true
+    required: false
     default: '22'
   user:
     description: 'SSH user'
@@ -14,6 +14,10 @@ inputs:
   key:
     description: 'Content of SSH private key'
     required: true
+  key_path:
+    description: 'Path to the SSH private key'
+    required: false
+    default: '/home/runner/.ssh/id_rsa'
 runs:
   using: 'composite'
   steps:
@@ -23,14 +27,14 @@ runs:
         SSH_PORT: ${{ inputs.port }}
         SSH_HOST: ${{ inputs.host }}
         SSH_USER: ${{ inputs.user }}
+        SSH_KEY_PATH: ${{ inputs.key_path }}
       run: |
         mkdir -p ~/.ssh
-        echo "$SSH_KEY" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
+        echo "$SSH_KEY" > $SSH_KEY_PATH
+        chmod 600 $SSH_KEY_PATH
+        ssh-keyscan -H $SSH_HOST 2> /dev/null 1> ~/.ssh/known_hosts
         echo "Host $SSH_HOST" >> ~/.ssh/config
-        echo "    IdentityFile ~/.ssh/id_rsa" >> ~/.ssh/config
-        echo "    StrictHostKeyChecking no" >> ~/.ssh/config
+        echo "    IdentityFile $SSH_KEY_PATH" >> ~/.ssh/config
         echo "DOCKER_HOST=ssh://$SSH_USER@$SSH_HOST:$SSH_PORT" >> $GITHUB_ENV
 
     - shell: bash
