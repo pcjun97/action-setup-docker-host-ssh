@@ -44,7 +44,7 @@ runs:
         echo "Host $INPUT_HOST" >> ~/.ssh/config
         echo "    IdentityFile $INPUT_KEY_PATH" >> ~/.ssh/config
         export DOCKER_HOST=ssh://$INPUT_USER@$INPUT_HOST:$INPUT_PORT
-        if [ $SET_DOCKER_HOST_ENV = true ]; then
+        if [ "$INPUT_SET_DOCKER_HOST_ENV" = true ]; then
           echo "DOCKER_HOST=$DOCKER_HOST" >> $GITHUB_ENV
         fi
         echo "::set-output name=docker-host::$DOCKER_HOST"
