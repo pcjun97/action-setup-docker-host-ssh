@@ -20,7 +20,7 @@ inputs:
   key_path:
     description: 'Path to the SSH private key'
     required: false
-    default: '~/.ssh/id_rsa'
+    default: '$HOME/.ssh/id_rsa'
   set_docker_host_env:
     description: 'If the DOCKER_HOST env should be changed'
     required: false
